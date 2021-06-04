@@ -51,4 +51,31 @@ const fetchCoordsByIP = function(ip, callback) {
   });
 };
 
-module.exports = { fetchMyIP, fetchCoordsByIP };
+const fetchISSFlyOverTimes = function(coords, callback) {
+
+  request(`http://api.open-notify.org/iss/v1/?lat=${coords.latitude}&lon=${coords.longitude}`, (error, response, body) => {
+
+    console.log(`LATITUDE ${coords.latitude} LONGITUDE ${coords.longitude}`);
+
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching flyover times. Response: ${body}`;
+      callback(Error(msg), null);
+      return;
+    }
+
+    const flyoverTimes = JSON.parse(body);
+    if (flyoverTimes) {
+      callback(null, flyoverTimes.response);
+    } else {
+      callback(`Error retrieving flyovertimes`, null);
+    }
+    
+  });
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes };
