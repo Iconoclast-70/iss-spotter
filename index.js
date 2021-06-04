@@ -1,8 +1,7 @@
 // index.js
-const { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes } = require('./iss');
+const { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes, nextnextISSTimesForMyLocation } = require('./iss');
 
-//http://api.open-notify.org/iss/v1/
-
+/*
 let myIp;
 let latLong = {latitude: "51.0207", longitude: "-114.1011" };
 
@@ -31,3 +30,17 @@ fetchISSFlyOverTimes(latLong, (error, passTimes) => {
     console.log(passTimes);
   }
 });
+
+*/
+
+nextnextISSTimesForMyLocation((error, passTimes) => {
+
+  //1622770643
+
+  if (error) {
+    return console.log("It didn't work!", error);
+  }
+  // success, print out the deets!
+  console.log(passTimes);
+});
+

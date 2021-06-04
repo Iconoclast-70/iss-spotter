@@ -55,8 +55,6 @@ const fetchISSFlyOverTimes = function(coords, callback) {
 
   request(`http://api.open-notify.org/iss/v1/?lat=${coords.latitude}&lon=${coords.longitude}`, (error, response, body) => {
 
-    console.log(`LATITUDE ${coords.latitude} LONGITUDE ${coords.longitude}`);
-
     if (error) {
       callback(error, null);
       return;
@@ -76,6 +74,32 @@ const fetchISSFlyOverTimes = function(coords, callback) {
     }
     
   });
+    
 };
 
-module.exports = { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes };
+const nextnextISSTimesForMyLocation = function(callback) {
+
+  fetchMyIP((error, ip) => {
+    if (error) {
+      return callback(error, null);
+    }
+
+    fetchCoordsByIP(ip, (error, loc) => {
+      if (error) {
+        return callback(error, null);
+      }
+
+      fetchISSFlyOverTimes(loc, (error, nextPasses) => {
+        if (error) {
+          return callback(error, null);
+        }
+        callback(null, nextPasses);
+      });
+    });
+  });
+
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes, nextnextISSTimesForMyLocation };
+
+//http://api.open-notify.org/iss/v1/?lat=40.027435&lon=-105.251945&date=1622836858
