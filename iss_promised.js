@@ -17,12 +17,18 @@ const fetchISSFlyOverTimes = function(body) {
 };
 
 const nextISSTimesForMyLocation = function() {
-
   fetchMyIP()
     .then(fetchCoordsByIP)
     .then(fetchCoordsByIP)
     .then(fetchISSFlyOverTimes)
-    .then(body => console.log(body))
+    .then(body => {
+      let flyover = JSON.parse(body).response;
+      for (const times in flyover) {
+        let flyoverDate = new Date(0);
+        flyoverDate.setUTCSeconds(flyover[times].risetime);
+        console.log(`Next pass at ${flyoverDate} for ${flyover[times].duration} seconds`);
+      }
+    })
     .catch((error) => {
       console.log("It didn't work: ", error.message);
     });
